@@ -1,14 +1,10 @@
 import http from 'k6/http';
 import { check } from 'k6';
 
-const testUrl = 'https://airdrop-api.lumoz.org/api/airdrop/evm_total_airdrop?address=0xebb2AB9FE2A0B4808f3CCC3542e883c74Cf9a346';
+const testUrl = __ENV.TEST_URL || 'https://airdrop-api.lumoz.org/api/airdrop/evm_total_airdrop?address=0xebb2AB9FE2A0B4808f3CCC3542e883c74Cf9a346';
 
 export let options = {
-  stages: [
-    { duration: '5s', target: 10000 }, // ramp up to 100 users
-    { duration: '10s', target: 10000 },  // stay at 100 users for 1 minute
-    { duration: '5s', target: 0 },  // ramp down to 0 users
-  ],
+  stages: JSON.parse(__ENV.STAGES || '[{"duration": "1s", "target": 10}, {"duration": "2s", "target": 10}, {"duration": "1s", "target": 0}]'),
   thresholds: {
     http_req_duration: ['p(95)<500'], // 95% of requests must complete below 500ms
   }
@@ -41,5 +37,6 @@ export function handleSummary(data) {
     },
   };
 
-  http.post(url, payload, params);
+  const res = http.post(url, payload, params);
+  console.log(res);
 }
