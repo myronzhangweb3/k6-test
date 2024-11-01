@@ -11,6 +11,9 @@ export let options = {
 };
 
 export default function () {
+  console.log("testUrl:", testUrl);
+  console.log("options.stages:", options.stages);
+  
   let res = http.get(testUrl);
 
   check(res, { 'status was 200': (r) => r.status == 200 });
