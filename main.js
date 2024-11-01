@@ -37,6 +37,5 @@ export function handleSummary(data) {
     },
   };
 
-  const res = http.post(url, payload, params);
-  console.log(res);
+  http.post(url, payload, params);
 }
