@@ -1,0 +1,11 @@
+{
+  "name": "k6test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "k6 run main.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
