@@ -1,5 +1,10 @@
 # k6 Test
 
+## Env
+```
+cp .env.example .env
+```
+
 ## Mac
 ```
 brew install k6
