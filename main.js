@@ -1,14 +1,21 @@
 import http from 'k6/http';
 import { check } from 'k6';
 
-const testUrl = __ENV.TEST_URL || 'https://airdrop-api.lumoz.org/api/airdrop/evm_total_airdrop?address=0xebb2AB9FE2A0B4808f3CCC3542e883c74Cf9a346';
+const testUrl = __ENV.TEST_URL;
 
 export let options = {
-  stages: JSON.parse(__ENV.STAGES || '[{"duration": "1s", "target": 10}, {"duration": "2s", "target": 10}, {"duration": "1s", "target": 0}]'),
+  stages: JSON.parse(__ENV.STAGES),
   thresholds: {
     http_req_duration: ['p(95)<500'], // 95% of requests must complete below 500ms
   }
 };
+
+if (!testUrl) {
+  throw new Error('TEST_URL is not set');
+}
+if (!options.stages) {
+  throw new Error('STAGES is not set');
+}
 
 export default function () {
   let res = http.get(testUrl);
