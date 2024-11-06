@@ -1,6 +1,13 @@
 import http from 'k6/http';
 import { check } from 'k6';
 
+if (!__ENV.TEST_URL) {
+  throw new Error('TEST_URL is not set');
+}
+if (!__ENV.STAGES) {
+  throw new Error('STAGES is not set');
+}
+
 const testUrl = __ENV.TEST_URL;
 
 export let options = {
@@ -9,13 +16,6 @@ export let options = {
     http_req_duration: ['p(95)<500'], // 95% of requests must complete below 500ms
   }
 };
-
-if (!testUrl) {
-  throw new Error('TEST_URL is not set');
-}
-if (!options.stages) {
-  throw new Error('STAGES is not set');
-}
 
 export default function () {
   let res = http.get(testUrl);
