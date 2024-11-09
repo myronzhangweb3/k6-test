@@ -7,8 +7,19 @@ if (!__ENV.TEST_URL) {
 if (!__ENV.STAGES) {
   throw new Error('STAGES is not set');
 }
+if (!__ENV.METHOD) {
+  throw new Error('METHOD is not set'); 
+}
+if (__ENV.METHOD === 'POST' && !__ENV.PAYLOAD) {
+  throw new Error('PAYLOAD is required for POST method');
+}
+if (!__ENV.LARK_URL) {
+  throw new Error('LARK_URL is not set');
+}
 
 const testUrl = __ENV.TEST_URL;
+const method = __ENV.METHOD.toUpperCase();
+const larkUrl = __ENV.LARK_URL;
 
 export let options = {
   stages: JSON.parse(__ENV.STAGES),
@@ -18,7 +29,17 @@ export let options = {
 };
 
 export default function () {
-  let res = http.get(testUrl);
+  let res;
+  if (method === 'GET') {
+    res = http.get(testUrl);
+  } else if (method === 'POST') {
+    const params = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    res = http.post(testUrl, JSON.parse(__ENV.PAYLOAD), params);
+  }
 
   check(res, { 'status was 200': (r) => r.status == 200 });
 }
@@ -30,11 +51,14 @@ export function handleSummary(data) {
   console.log("失败率:", data.metrics.http_req_failed.values.rate);
   console.log("最大虚拟用户数:", data.metrics.vus_max.values.max);
 
-  const url = 'https://open.larksuite.com/open-apis/bot/v2/hook/75a79fe7-2d36-48fe-8630-71414f5a0bcc';
+  const requestInfo = method === 'POST' ? 
+    `\nRequest Payload: ${__ENV.PAYLOAD}` :
+    '';
+
   const payload = JSON.stringify({
     msg_type: "text",
     content: {
-      text: `Summary:\nTime: ${new Date().toISOString().replace('T', ' ').replace(/\..+/, '')}\nURL: ${testUrl}\np(95): ${data.metrics.http_req_duration.values['p(95)']}ms\nQPS: ${data.metrics.http_reqs.values.rate}\n通过率: ${data.metrics.checks.values.rate}\n失败率: ${data.metrics.http_req_failed.values.rate}\n最大虚拟用户数: ${data.metrics.vus_max.values.max}\nStages: ${JSON.stringify(options.stages)}`
+      text: `Summary:\nTime: ${new Date().toISOString().replace('T', ' ').replace(/\..+/, '')}\nURL: ${testUrl}\nMethod: ${method}${requestInfo}\np(95): ${data.metrics.http_req_duration.values['p(95)']}ms\nQPS: ${data.metrics.http_reqs.values.rate}\n通过率: ${data.metrics.checks.values.rate}\n失败率: ${data.metrics.http_req_failed.values.rate}\n最大虚拟用户数: ${data.metrics.vus_max.values.max}\nStages: ${JSON.stringify(options.stages)}`
     }
   });
 
@@ -44,5 +68,5 @@ export function handleSummary(data) {
     },
   };
 
-  http.post(url, payload, params);
+  http.post(larkUrl, payload, params);
 }
