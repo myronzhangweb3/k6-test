@@ -20,6 +20,7 @@ if (!__ENV.LARK_URL) {
 const testUrl = __ENV.TEST_URL;
 const method = __ENV.METHOD.toUpperCase();
 const larkUrl = __ENV.LARK_URL;
+const headers = __ENV.HEADERS;
 
 export let options = {
   stages: JSON.parse(__ENV.STAGES),
@@ -34,9 +35,7 @@ export default function () {
     res = http.get(testUrl);
   } else if (method === 'POST') {
     const params = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: headers,
     };
     res = http.post(testUrl, JSON.parse(__ENV.PAYLOAD), params);
   }
