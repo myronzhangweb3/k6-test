@@ -20,7 +20,7 @@ if (!__ENV.LARK_URL) {
 const testUrl = __ENV.TEST_URL;
 const method = __ENV.METHOD.toUpperCase();
 const larkUrl = __ENV.LARK_URL;
-const headers = __ENV.HEADERS;
+const headers = JSON.parse(__ENV.HEADERS);
 
 export let options = {
   stages: JSON.parse(__ENV.STAGES),
