@@ -5,12 +5,6 @@
 cp .env.example .env
 ```
 
-## Mac
-```
-brew install k6
-npm run start
-```
-
 ## Docker
 
 ### Web API
