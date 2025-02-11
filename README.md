@@ -12,8 +12,16 @@ npm run start
 ```
 
 ## Docker
+
+### Web API
 ```
-docker-compose up --build
+docker-compose up k6-api-test --build
+```
+
+### LLM
+> 参考：https://github.com/av/harbor/blob/v0.2.27/k6/scripts/openai-api-throughput.js
+```
+docker-compose up k6-llm-test --build
 ```
 
 # 指标
