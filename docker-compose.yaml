@@ -1,12 +1,23 @@
 version: '3.8'
 
 services:
-  k6-test:
+  k6-llm-test:
     build:
       context: .
       dockerfile: Dockerfile
     env_file:
-      - .env
+      - .env.llm
     # restart: unless-stopped
     image: k6-test
     container_name: k6_test
+    command: run open-api-throughput/openai-api-throughput.js
+  k6-api-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env.api
+    # restart: unless-stopped
+    image: k6-test
+    container_name: k6_test
+    command: run web-api/main.js

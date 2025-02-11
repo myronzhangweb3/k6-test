@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "k6 run main.js"
+    "start": "k6 run web-api/main.js"
   },
   "author": "",
   "license": "ISC",

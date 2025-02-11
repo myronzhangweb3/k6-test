@@ -5,7 +5,4 @@ FROM grafana/k6:0.54.0
 WORKDIR /app
 
 # Copy the k6 script into the container
-COPY main.js .
-
-# Command to run the k6 script
-CMD ["run", "main.js"]
+COPY . .
