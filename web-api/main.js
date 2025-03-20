@@ -37,10 +37,8 @@ export default function () {
         const params = {
             headers: headers ? JSON.parse(headers) : {},
         };
-        res = http.post(testUrl, JSON.parse(__ENV.PAYLOAD), params);
+        res = http.post(testUrl, JSON.stringify(JSON.parse(__ENV.PAYLOAD)), params);
     }
-    console.log(`res.status: ${JSON.stringify(res)}`)
-
     check(res, { 'status was 200': (r) => r.status == 200 });
 }
 
