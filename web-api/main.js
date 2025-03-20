@@ -39,7 +39,7 @@ export default function () {
         };
         res = http.post(testUrl, JSON.parse(__ENV.PAYLOAD), params);
     }
-    console.log(`res.status: ${res.status}`)
+    console.log(`res.status: ${JSON.stringify(res)}`)
 
     check(res, { 'status was 200': (r) => r.status == 200 });
 }
